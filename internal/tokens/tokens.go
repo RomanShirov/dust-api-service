@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-var jwtSecretKey = os.Getenv("JWT_SECRET_KEY")
+var jwtSecretKey = []byte(os.Getenv("JWT_SECRET_KEY"))
 
 func GenerateUserToken(username string) string {
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -14,3 +14,5 @@ func GenerateUserToken(username string) string {
 	token, _ := tokenClaims.SignedString(jwtSecretKey)
 	return token
 }
+
+func GetUsernameFromToken(token jwt.Token) {}
