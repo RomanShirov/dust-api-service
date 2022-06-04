@@ -4,19 +4,12 @@ import (
 	"dust-api-service/internal/api"
 	"dust-api-service/internal/db"
 	"dust-api-service/internal/tokens"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"os"
-	//log "github.com/sirupsen/logrus"
 )
 
 func InitAuthHandlers(app *fiber.App) {
 	apiGroup := app.Group("/api")
-	apiGroup.Get("/token", func(c *fiber.Ctx) error {
-		fmt.Println(os.Getenv("JWT_SECRET_KEY"))
-		fmt.Println("SK:", []byte(os.Getenv("JWT_SECRET_KEY")))
-		return c.SendString("Hello")
-	})
+
 	apiGroup.Post("/register", func(c *fiber.Ctx) error {
 		username := c.FormValue("username")
 		password := c.FormValue("password")
