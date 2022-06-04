@@ -1,6 +1,7 @@
 package main
 
 import (
+	"dust-api-service/internal/db"
 	"dust-api-service/internal/handlers"
 	"dust-api-service/internal/utils"
 	"github.com/gofiber/fiber/v2"
@@ -16,6 +17,7 @@ func main() {
 		log.Fatalf("Error loading .env file")
 	}
 
+	db.InitDatabase()
 	app := fiber.New()
 
 	handlers.InitAuthHandlers(app)

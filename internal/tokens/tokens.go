@@ -1,5 +1,16 @@
 package tokens
 
-func main() {
+import (
+	"github.com/golang-jwt/jwt/v4"
+	"os"
+)
 
+var jwtSecretKey = os.Getenv("JWT_SECRET_KEY")
+
+func GenerateUserToken(username string) string {
+	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"username": username,
+	})
+	token, _ := tokenClaims.SignedString(jwtSecretKey)
+	return token
 }
