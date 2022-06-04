@@ -1,18 +1,25 @@
 package tokens
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"os"
+	"time"
 )
 
-var jwtSecretKey = []byte(os.Getenv("JWT_SECRET_KEY"))
-
 func GenerateUserToken(username string) string {
-	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+	claims := jwt.MapClaims{
 		"username": username,
-	})
-	token, _ := tokenClaims.SignedString(jwtSecretKey)
+		"exp":      time.Now().Add(time.Hour * 8766).Unix(),
+	}
+	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token, _ := tokenClaims.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
 	return token
 }
 
-func GetUsernameFromToken(token jwt.Token) {}
+func GetUsernameFromToken(c *fiber.Ctx) string {
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	name := claims["username"].(string)
+	return name
+}

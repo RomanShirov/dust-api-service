@@ -5,7 +5,7 @@ import (
 	"dust-api-service/internal/handlers"
 	"dust-api-service/internal/utils"
 	"github.com/gofiber/fiber/v2"
-	//jwtware "github.com/gofiber/jwt/v3"
+	jwtware "github.com/gofiber/jwt/v3"
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
 	"os"
@@ -22,9 +22,9 @@ func main() {
 
 	handlers.InitAuthHandlers(app)
 
-	//app.Use(jwtware.New(jwtware.Config{
-	//	SigningKey: []byte(os.Getenv("JWT_SECRET_KEY")),
-	//}))
+	app.Use(jwtware.New(jwtware.Config{
+		SigningKey: []byte(os.Getenv("JWT_SECRET_KEY")),
+	}))
 
 	handlers.InitRestrictedAPI(app)
 
