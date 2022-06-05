@@ -2,8 +2,10 @@ package api
 
 import (
 	"dust-api-service/internal/db"
+	"dust-api-service/internal/models"
 	"dust-api-service/internal/tokens"
 	"errors"
+	log "github.com/sirupsen/logrus"
 )
 
 func CreateUser(username, password string) (token string, err error) {
@@ -17,4 +19,16 @@ func CreateUser(username, password string) (token string, err error) {
 		}
 		return tokens.GenerateUserToken(username), nil
 	}
+}
+
+func CreateCharacter(character models.CharacterData) error {
+	username := character.Username
+	title := character.Title
+	description := character.Description
+	err := db.AddCharacter(username, title, description)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
 }

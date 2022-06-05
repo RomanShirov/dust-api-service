@@ -9,7 +9,6 @@ import (
 )
 
 var ctx, _ = context.WithTimeout(context.Background(), 10*time.Second)
-var charactersDb *mongo.Collection
 
 func InitDatabase() {
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017/")
