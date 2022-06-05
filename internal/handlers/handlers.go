@@ -34,7 +34,6 @@ func InitAuthHandlers(app *fiber.App) {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
 	})
-
 }
 
 func InitRestrictedAPI(app *fiber.App) {
@@ -43,6 +42,10 @@ func InitRestrictedAPI(app *fiber.App) {
 	apiGroup.Get("/test", func(c *fiber.Ctx) error {
 		name := tokens.GetUsernameFromToken(c)
 		return c.SendString(name)
+	})
+	apiGroup.Get("/getAllUsers", func(c *fiber.Ctx) error {
+		users := db.GetAllUsers()
+		return c.JSON(users)
 	})
 
 }

@@ -52,3 +52,15 @@ func ValidateUser(username, password string) bool {
 		return false
 	}
 }
+
+func GetAllUsers() []bson.M {
+	cursor, err := usersDb.Find(ctx, bson.M{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	var users []bson.M
+	if err = cursor.All(ctx, &users); err != nil {
+		log.Fatal(err)
+	}
+	return users
+}
