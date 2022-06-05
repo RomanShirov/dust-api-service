@@ -54,7 +54,7 @@ func ValidateUser(username, password string) bool {
 }
 
 func GetAllUsers() []bson.M {
-	cursor, err := usersDb.Find(ctx, bson.M{})
+	cursor, err := usersDb.Find(context.TODO(), bson.M{})
 	if err != nil {
 		log.Fatal(err)
 	}

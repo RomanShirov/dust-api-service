@@ -17,6 +17,11 @@ func InitAuthHandlers(app *fiber.App) {
 		return c.JSON(users)
 	})
 
+	apiGroup.Get("/getAllUsers", func(c *fiber.Ctx) error {
+		users := db.GetAllUsers()
+		return c.JSON(users)
+	})
+
 	apiGroup.Post("/register", func(c *fiber.Ctx) error {
 		username := c.FormValue("username")
 		password := c.FormValue("password")
