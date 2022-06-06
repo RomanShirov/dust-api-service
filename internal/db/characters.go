@@ -17,7 +17,7 @@ func AddCharacter(username, title string, description interface{}) error {
 		log.Fatal(err)
 		return err
 	}
-	return err
+	return nil
 }
 
 func UpdateCharacter(username, title string, description interface{}) error {
@@ -29,7 +29,7 @@ func UpdateCharacter(username, title string, description interface{}) error {
 		log.Fatal(err)
 		return err
 	}
-	return err
+	return nil
 }
 
 func GetAllCharacters() []bson.M {
@@ -62,5 +62,5 @@ func RemoveCharacter(username, title string) error {
 		log.Error(err)
 		return err
 	}
-	return err
+	return nil
 }

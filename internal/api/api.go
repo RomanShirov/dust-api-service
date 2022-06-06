@@ -26,7 +26,7 @@ func GetUserRole(username string) (string, error) {
 	if err != nil {
 		return "", err
 	} else {
-		return role, err
+		return role, nil
 	}
 }
 
