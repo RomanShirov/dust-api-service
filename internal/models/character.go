@@ -27,6 +27,11 @@ type Character struct {
 	ModeratedBy string      `json:"moderated_by" bson:"moderated_by"`
 }
 
+type RemoveCharacterRequest struct {
+	Username string `json:"username"`
+	Title    string `json:"title"`
+}
+
 func CreateCharacter(username string, title string, description interface{}) *Character {
 	character := new(Character)
 	character.UploadBy = username

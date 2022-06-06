@@ -9,46 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func InitAuthHandlers(app *fiber.App) {
-	apiGroup := app.Group("/api")
-
-	apiGroup.Get("/getAllCharacters", func(c *fiber.Ctx) error {
-		users := db.GetAllCharacters()
-		return c.JSON(users)
-	})
-
-	apiGroup.Get("/getAllUsers", func(c *fiber.Ctx) error {
-		users := db.GetAllUsers()
-		return c.JSON(users)
-	})
-
-	apiGroup.Post("/register", func(c *fiber.Ctx) error {
-		username := c.FormValue("username")
-		password := c.FormValue("password")
-		token, err := api.CreateUser(username, password)
-		if err != nil {
-			return c.SendStatus(fiber.StatusUnauthorized)
-		} else {
-			return c.JSON(fiber.Map{
-				"success": true,
-				"token":   token})
-		}
-	})
-
-	apiGroup.Post("/login", func(c *fiber.Ctx) error {
-		username := c.FormValue("username")
-		password := c.FormValue("password")
-		userIsValid := db.ValidateUser(username, password)
-		if userIsValid {
-			token := tokens.GenerateUserToken(username)
-			return c.JSON(fiber.Map{"success": true, "token": token})
-		} else {
-			return c.SendStatus(fiber.StatusUnauthorized)
-		}
-	})
-}
-
-func InitRestrictedAPI(app *fiber.App) {
+func InitAPI(app *fiber.App) {
 	apiGroup := app.Group("/api")
 
 	character := apiGroup.Group("/character")
@@ -98,12 +59,11 @@ func InitRestrictedAPI(app *fiber.App) {
 			return c.JSON(fiber.Map{"error": "invalid request"})
 		}
 
-		err := db.RemoveCharacter(username, titleRequest.Title)
+		err := api.RemoveCharacter(username, titleRequest.Title)
 		if err != nil {
 			log.Error(err)
 			return c.JSON(fiber.Map{"error": true})
 		}
 		return c.JSON(fiber.Map{"success": true})
 	})
-
 }

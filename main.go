@@ -26,7 +26,9 @@ func main() {
 		SigningKey: []byte(os.Getenv("JWT_SECRET_KEY")),
 	}))
 
-	handlers.InitRestrictedAPI(app)
+	handlers.InitAPI(app)
+
+	handlers.InitSafetyHandlers(app)
 
 	if os.Getenv("STAGE_STATUS") == "dev" {
 		utils.StartServer(app)

@@ -32,3 +32,13 @@ func CreateCharacter(character models.CharacterData) error {
 	}
 	return nil
 }
+
+func RemoveCharacter(username, title string) error {
+	err := db.RemoveCharacter(username, title)
+	if err != nil {
+		log.Error(err)
+		return err
+	} else {
+		return nil
+	}
+}
