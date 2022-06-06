@@ -46,7 +46,7 @@ func UpdateRole(username, role string) error {
 		log.Fatal(err)
 		return err
 	}
-	return nil
+	return err
 }
 
 func CheckUserExists(username, password string) bool {
