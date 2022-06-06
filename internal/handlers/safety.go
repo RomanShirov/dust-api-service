@@ -8,16 +8,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func VerifyPermissions(username, targetRole string) bool {
+func VerifyModeratorPermissions(username string) bool {
 	userRole, _ := api.GetUserRole(username)
-	return userRole == targetRole
-
+	return userRole == "admin" || userRole == "moderator"
 }
+
 func InitSafetyHandlers(app *fiber.App) {
 	apiGroup := app.Group("/api")
 	safety := apiGroup.Group("/safety", func(c *fiber.Ctx) error { // middleware for /api/v1
 		username := tokens.GetUsernameFromToken(c)
-		if VerifyPermissions(username, "moderator") {
+		if VerifyModeratorPermissions(username) {
 			return c.Next()
 		} else {
 			return c.SendStatus(403)
