@@ -14,7 +14,7 @@ func InitAPI(app *fiber.App) {
 
 	character := apiGroup.Group("/character")
 
-	character.Post("/", func(c *fiber.Ctx) error {
+	character.Put("/add", func(c *fiber.Ctx) error {
 		requestJson := new(models.CharacterRequest)
 		username := tokens.GetUsernameFromToken(c)
 		if err := c.BodyParser(requestJson); err != nil {
@@ -36,7 +36,7 @@ func InitAPI(app *fiber.App) {
 		userCharacters := db.GetAllUserCharacters(username)
 		return c.JSON(userCharacters)
 	})
-	character.Put("/", func(c *fiber.Ctx) error {
+	character.Put("/edit", func(c *fiber.Ctx) error {
 		requestJson := new(models.CharacterRequest)
 		username := tokens.GetUsernameFromToken(c)
 		if err := c.BodyParser(requestJson); err != nil {
@@ -49,7 +49,7 @@ func InitAPI(app *fiber.App) {
 			return c.JSON(fiber.Map{"success": true})
 		}
 	})
-	character.Delete("/", func(c *fiber.Ctx) error {
+	character.Delete("/delete", func(c *fiber.Ctx) error {
 		username := tokens.GetUsernameFromToken(c)
 		titleRequest := struct {
 			Title string `json:"title"`
