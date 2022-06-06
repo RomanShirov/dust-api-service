@@ -5,6 +5,7 @@ import (
 	"dust-api-service/internal/handlers"
 	"dust-api-service/internal/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	jwtware "github.com/gofiber/jwt/v3"
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
@@ -19,6 +20,9 @@ func main() {
 
 	db.InitDatabase()
 	app := fiber.New()
+	app.Use(logger.New(logger.Config{
+		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
+	}))
 
 	handlers.InitAuthHandlers(app)
 
@@ -27,8 +31,8 @@ func main() {
 	}))
 
 	handlers.InitAPI(app)
-
 	handlers.InitSafetyHandlers(app)
+	handlers.InitAdminHandlers(app)
 
 	if os.Getenv("STAGE_STATUS") == "dev" {
 		utils.StartServer(app)

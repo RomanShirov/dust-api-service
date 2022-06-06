@@ -12,6 +12,7 @@ import (
 type UserResult struct {
 	Username     string `bson:"username"`
 	PasswordHash string `bson:"password_hash"`
+	Role         string `bson:"role"`
 }
 
 var usersDb *mongo.Collection
@@ -19,6 +20,28 @@ var usersDb *mongo.Collection
 func AddUser(username, password string) error {
 	user := models.MakeUser(username, password)
 	_, err := usersDb.InsertOne(context.TODO(), user)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil
+}
+
+func GetUserRole(username string) (string, error) {
+	var result UserResult
+	err := usersDb.FindOne(context.TODO(), bson.D{{"username", username}}).Decode(&result)
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+	return result.Role, err
+}
+
+func UpdateRole(username, role string) error {
+	_, err := usersDb.UpdateOne(context.TODO(), bson.D{{"username", username}},
+		bson.D{
+			{"$set", bson.D{{"role", role}}},
+		})
 	if err != nil {
 		log.Fatal(err)
 		return err

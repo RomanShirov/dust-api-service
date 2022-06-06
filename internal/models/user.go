@@ -12,6 +12,11 @@ type User struct {
 	CreatedAt    string `json:"created_at" bson:"created_at"`
 }
 
+type ChangeRoleRequest struct {
+	Username string `json:"username"`
+	Role     string `json:"role"`
+}
+
 func MakeUser(username string, password string) *User {
 	user := new(User)
 	user.Username = username

@@ -21,6 +21,15 @@ func CreateUser(username, password string) (token string, err error) {
 	}
 }
 
+func GetUserRole(username string) (string, error) {
+	role, err := db.GetUserRole(username)
+	if err != nil {
+		return "", err
+	} else {
+		return role, err
+	}
+}
+
 func CreateCharacter(character models.CharacterData) error {
 	username := character.Username
 	title := character.Title

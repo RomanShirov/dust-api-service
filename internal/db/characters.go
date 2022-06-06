@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"dust-api-service/internal/models"
-	"fmt"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -22,7 +21,7 @@ func AddCharacter(username, title string, description interface{}) error {
 }
 
 func UpdateCharacter(username, title string, description interface{}) error {
-	result, err := charactersDb.UpdateOne(context.TODO(), bson.D{{"upload_by", username}, {"title", title}},
+	_, err := charactersDb.UpdateOne(context.TODO(), bson.D{{"upload_by", username}, {"title", title}},
 		bson.D{
 			{"$set", bson.D{{"description", description}}},
 		})
@@ -30,7 +29,6 @@ func UpdateCharacter(username, title string, description interface{}) error {
 		log.Fatal(err)
 		return err
 	}
-	fmt.Printf("Updated %v Documents!\n", result.ModifiedCount)
 	return nil
 }
 
