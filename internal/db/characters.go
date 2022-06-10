@@ -10,8 +10,8 @@ import (
 
 var charactersDb *mongo.Collection
 
-func AddCharacter(username, title string, description interface{}) error {
-	user := models.CreateCharacter(username, title, description)
+func CreateCharacter(character models.CharacterData) error {
+	user := models.CreateCharacter(character.Username, character.Title, character.Description)
 	_, err := charactersDb.InsertOne(context.TODO(), user)
 	if err != nil {
 		log.Fatal(err)

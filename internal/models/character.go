@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Models, used for preparing character data from request
 type CharacterRequest struct {
 	Title       string      `json:"title"`
 	Description interface{} `json:"description"`
@@ -15,6 +16,7 @@ type CharacterData struct {
 	CharacterRequest
 }
 
+// Character data, written to database
 type Character struct {
 	UploadBy    string      `json:"upload_by" bson:"upload_by"`
 	Title       string      `json:"title" bson:"title"`
@@ -27,6 +29,7 @@ type Character struct {
 	ModeratedBy string      `json:"moderated_by" bson:"moderated_by"`
 }
 
+// JSON data for removing a character
 type RemoveCharacterRequest struct {
 	Username string `json:"username"`
 	Title    string `json:"title"`

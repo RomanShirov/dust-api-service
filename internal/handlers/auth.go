@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"dust-api-service/internal/api"
 	"dust-api-service/internal/db"
 	"dust-api-service/internal/tokens"
 	"github.com/gofiber/fiber/v2"
@@ -10,24 +9,14 @@ import (
 func InitAuthHandlers(app *fiber.App) {
 	apiGroup := app.Group("/api")
 
-	apiGroup.Post("/admin_demo", func(c *fiber.Ctx) error {
-		username := "admin"
-		password := "test"
-		token, err := api.CreateUser(username, password)
-		_ = db.UpdateRole(username, "admin")
-		if err != nil {
-			return c.SendStatus(fiber.StatusUnauthorized)
-		} else {
-			return c.JSON(fiber.Map{
-				"success": true,
-				"token":   token})
-		}
-	})
-
 	apiGroup.Post("/register", func(c *fiber.Ctx) error {
 		username := c.FormValue("username")
 		password := c.FormValue("password")
-		token, err := api.CreateUser(username, password)
+		if db.CheckUserExists(username, password) {
+			_ = c.SendStatus(fiber.StatusUnauthorized)
+			return c.JSON(fiber.Map{"error": "user already exists"})
+		}
+		token, err := db.CreateUser(username, password)
 		if err != nil {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		} else {

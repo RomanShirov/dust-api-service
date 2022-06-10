@@ -3,32 +3,28 @@ package db
 import (
 	"context"
 	"dust-api-service/internal/models"
+	"dust-api-service/internal/tokens"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type UserResult struct {
-	Username     string `bson:"username"`
-	PasswordHash string `bson:"password_hash"`
-	Role         string `bson:"role"`
-}
-
 var usersDb *mongo.Collection
 
-func AddUser(username, password string) error {
+func CreateUser(username, password string) (string, error) {
 	user := models.MakeUser(username, password)
 	_, err := usersDb.InsertOne(context.TODO(), user)
 	if err != nil {
 		log.Fatal(err)
-		return err
+		return "", err
 	}
-	return nil
+	token := tokens.GenerateUserToken(username)
+	return token, nil
 }
 
 func GetUserRole(username string) (string, error) {
-	var result UserResult
+	var result models.UserResponse
 	err := usersDb.FindOne(context.TODO(), bson.D{{"username", username}}).Decode(&result)
 	if err != nil {
 		log.Error(err)
@@ -51,7 +47,7 @@ func UpdateRole(username, role string) error {
 
 func CheckUserExists(username, password string) bool {
 	user := models.MakeUser(username, password)
-	var result UserResult
+	var result models.UserResponse
 	err := usersDb.FindOne(context.TODO(), bson.D{{"username", user.Username}}).Decode(&result)
 	if err == mongo.ErrNoDocuments {
 		return false
@@ -63,9 +59,12 @@ func CheckUserExists(username, password string) bool {
 
 func ValidateUser(username, password string) bool {
 	user := models.MakeUser(username, password)
-	var result UserResult
+	var result models.UserResponse
 	err := usersDb.FindOne(context.TODO(), bson.D{{"username", user.Username}}).Decode(&result)
+
+	// Returns nil if success
 	passwordHashIsValid := bcrypt.CompareHashAndPassword([]byte(result.PasswordHash), []byte(password))
+
 	if err == mongo.ErrNoDocuments {
 		return false
 	} else {

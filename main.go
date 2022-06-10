@@ -20,6 +20,7 @@ func main() {
 
 	db.InitDatabase()
 	app := fiber.New()
+
 	app.Use(logger.New(logger.Config{
 		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
 	}))

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"dust-api-service/internal/api"
 	"dust-api-service/internal/db"
 	"dust-api-service/internal/models"
 	"dust-api-service/internal/tokens"
@@ -9,7 +8,7 @@ import (
 )
 
 func VerifyAdminPermissions(username string) bool {
-	userRole, _ := api.GetUserRole(username)
+	userRole, _ := db.GetUserRole(username)
 	return userRole == "admin"
 }
 

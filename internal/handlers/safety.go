@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"dust-api-service/internal/api"
 	"dust-api-service/internal/db"
 	"dust-api-service/internal/models"
 	"dust-api-service/internal/tokens"
@@ -9,7 +8,7 @@ import (
 )
 
 func VerifyModeratorPermissions(username string) bool {
-	userRole, _ := api.GetUserRole(username)
+	userRole, _ := db.GetUserRole(username)
 	return userRole == "admin" || userRole == "moderator"
 }
 
@@ -30,8 +29,8 @@ func InitSafetyHandlers(app *fiber.App) {
 	})
 
 	safety.Get("/get_all_characters", func(c *fiber.Ctx) error {
-		users := db.GetAllCharacters()
-		return c.JSON(users)
+		characters := db.GetAllCharacters()
+		return c.JSON(characters)
 	})
 
 	safety.Delete("/remove_character", func(c *fiber.Ctx) error {
@@ -39,11 +38,10 @@ func InitSafetyHandlers(app *fiber.App) {
 		if err := c.BodyParser(request); err != nil {
 			return err
 		}
-		err := api.RemoveCharacter(request.Username, request.Title)
+		err := db.RemoveCharacter(request.Username, request.Title)
 		if err != nil {
 			return c.JSON(fiber.Map{"error": err})
-		} else {
-			return c.JSON(fiber.Map{"success": true})
 		}
+		return c.JSON(fiber.Map{"success": true})
 	})
 }
