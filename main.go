@@ -7,11 +7,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	jwtware "github.com/gofiber/jwt/v3"
+	"github.com/gofiber/swagger"
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
 	"os"
 )
 
+// @title Dust API
+// @version 1.0
+// @description This is a API for dust server
+// @contact.email fiber@swagger.io
+// @BasePath /
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
@@ -19,10 +25,24 @@ func main() {
 	}
 
 	db.InitDatabase()
-	app := fiber.New()
 
+	app := fiber.New()
 	app.Use(logger.New(logger.Config{
 		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
+	}))
+
+	app.Static("/docs", "./static/docs")
+
+	app.Get("/swagger/*", swagger.New(swagger.Config{ // custom
+		URL:         "/docs/swagger.yaml",
+		DeepLinking: false,
+		// Expand ("list") or Collapse ("none") tag groups by default
+		DocExpansion: "none",
+		// Prefill OAuth ClientId on Authorize popup
+		OAuth: &swagger.OAuthConfig{
+			AppName:  "OAuth Provider",
+			ClientId: "21bb4edc-05a7-4afc-86f1-2e151e4ba6e2",
+		},
 	}))
 
 	handlers.InitAuthHandlers(app)
