@@ -13,11 +13,6 @@ import (
 	"os"
 )
 
-// @title Dust API
-// @version 1.0
-// @description This is a API for dust server
-// @contact.email fiber@swagger.io
-// @BasePath /
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
